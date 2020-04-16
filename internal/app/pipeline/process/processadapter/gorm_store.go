@@ -21,6 +21,7 @@ import (
 	"emperror.dev/errors"
 	"github.com/jinzhu/gorm"
 
+	"github.com/banzaicloud/pipeline/.gen/pipeline/pipeline"
 	"github.com/banzaicloud/pipeline/internal/app/pipeline/process"
 )
 
@@ -202,6 +203,13 @@ func (s *GormStore) LogProcess(ctx context.Context, p process.Process) error {
 	}
 
 	return nil
+}
+
+// CancelProcess sets the given process's status to canceled.
+func (s *GormStore) CancelProcess(ctx context.Context, id string) error {
+	update := process.Process{Status: pipeline.CANCELED}
+	err := s.db.Model(process.Process{Id: id}).Update(update).Error
+	return errors.Wrap(err, "failed to update process")
 }
 
 // LogProcessEvent logs a process event

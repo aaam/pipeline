@@ -301,7 +301,7 @@ func main() {
 		commonSecretStore := commonadapter.NewSecretStore(secret.Store, commonadapter.OrgIDContextExtractorFunc(auth.GetCurrentOrganizationID))
 		configFactory := kubernetes.NewConfigFactory(commonSecretStore)
 
-		processService := process.NewService(processadapter.NewGormStore(db))
+		processService := process.NewService(processadapter.NewGormStore(db), workflowClient)
 		processLogActivity := process.NewProcessLogActivity(processService)
 
 		activity.RegisterWithOptions(processLogActivity.ExecuteProcessLog, activity.RegisterOptions{Name: process.ProcessLogActivityName})
